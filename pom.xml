@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-gateway-stuart</artifactId>
+    <version>3.0.0.BUILD-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Spring Cloud Gateway Stuart</name>
+    <description>Spring Cloud Gateway Stuart</description>
+
+    <parent>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-build</artifactId>
+        <version>3.0.0.BUILD-SNAPSHOT</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring-cloud-commons.version>3.0.0.BUILD-SNAPSHOT</spring-cloud-commons.version>
+        <spring-cloud-circuitbreaker.version>2.0.0.BUILD-SNAPSHOT</spring-cloud-circuitbreaker.version>
+        <embedded-redis.version>0.6</embedded-redis.version>
+        <blockhound.version>1.0.1.RELEASE</blockhound.version>
+    </properties>
+    <modules>
+        <module>spring-cloud-gateway-dependencies-stuart</module>
+        <module>spring-cloud-gateway-stuart-core</module>
+        <module>spring-cloud-starter-gateway-stuart</module>
+        <module>spring-cloud-gateway-stuart-sample</module>
+    </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-gateway-dependencies-stuart</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-commons-dependencies</artifactId>
+                <version>${spring-cloud-commons.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-test-support</artifactId>
+                <scope>test</scope>
+                <version>${spring-cloud-commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-circuitbreaker-dependencies</artifactId>
+                <version>${spring-cloud-circuitbreaker.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
+                <version>${spring-cloud-circuitbreaker.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-devtools</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.kstyrc</groupId>
+                <artifactId>embedded-redis</artifactId>
+                <version>${embedded-redis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor.tools</groupId>
+                <artifactId>blockhound-junit-platform</artifactId>
+                <version>${blockhound.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

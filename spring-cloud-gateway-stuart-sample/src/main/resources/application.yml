@@ -1,0 +1,28 @@
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.ipc.netty: DEBUG
+    reactor.netty: DEBUG
+
+management.endpoints.web.exposure.include: '*'
+server:
+  port: 8086
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: "aaaaaaaaa"
+          uri: http://www.sina.com
+          order: 1
+          predicates:
+           - Path=/test**
+        - id: "bbbbbbbbb"
+          uri: http://www.baidu.com
+          order: 2
+          predicates:
+          - Path=/test1/**
+
+
