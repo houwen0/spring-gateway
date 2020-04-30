@@ -18,7 +18,7 @@ spring:
           uri: http://www.sina.com
           order: 1
           predicates:
-           - Path=/test**
+           - Path=/test/**
         - id: "bbbbbbbbb"
           uri: http://www.baidu.com
           order: 2

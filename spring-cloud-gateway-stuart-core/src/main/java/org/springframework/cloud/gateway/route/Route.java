@@ -31,6 +31,7 @@ import java.util.function.Predicate;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.toAsyncPredicate;
 
 /**
+ *
  * @author Spencer Gibb
  */
 public class Route implements Ordered {
@@ -75,6 +76,7 @@ public class Route implements Ordered {
 		return new AsyncBuilder();
 	}
 
+	//建造者模式
 	public static AsyncBuilder async(RouteDefinition routeDefinition) {
 		// @formatter:off
 		return new AsyncBuilder().id(routeDefinition.getId())

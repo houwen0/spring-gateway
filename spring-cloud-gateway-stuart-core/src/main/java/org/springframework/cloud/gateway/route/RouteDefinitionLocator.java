@@ -19,6 +19,7 @@ package org.springframework.cloud.gateway.route;
 import reactor.core.publisher.Flux;
 
 /**
+ * 从原始数据中获取到route信息，返回RouteDefinition对象信息
  * @author Spencer Gibb
  */
 public interface RouteDefinitionLocator {

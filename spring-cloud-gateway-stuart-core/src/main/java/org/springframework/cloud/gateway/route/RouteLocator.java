@@ -19,6 +19,7 @@ package org.springframework.cloud.gateway.route;
 import reactor.core.publisher.Flux;
 
 /**
+ * 将原始的RouteDefinition对象进行，进行加工转换为Route对象信息
  * @author Spencer Gibb
  */
 // TODO: rename to Routes?

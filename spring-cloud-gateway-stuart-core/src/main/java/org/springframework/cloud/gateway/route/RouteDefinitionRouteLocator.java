@@ -38,6 +38,7 @@ import reactor.core.publisher.Flux;
 import java.util.*;
 
 /**
+ * 将原始的RouteDefinition对象进行，进行加工转换为Route对象信息
  * {@link RouteLocator} that loads routes from a {@link RouteDefinitionLocator}.
  *
  * @author Spencer Gibb
@@ -113,14 +114,23 @@ public class RouteDefinitionRouteLocator implements RouteLocator {
 		});
 	}
 
+	/**
+	 * 将yaml文件中的路由定义转换为Route对象
+	 * @param routeDefinition  yaml文件中加载的路由定义
+	 * @return
+	 */
 	private Route convertToRoute(RouteDefinition routeDefinition) {
+		//此处断言通过二叉树进行组织
 		AsyncPredicate<ServerWebExchange> predicate = combinePredicates(routeDefinition);
+		//将路由器中配置的默认过滤器和GateFilter进行组装并排序
 		List<GatewayFilter> gatewayFilters = getFilters(routeDefinition);
 
+		//建造者模式，最终返回Route对象
 		return Route.async(routeDefinition).asyncPredicate(predicate)
 				.replaceFilters(gatewayFilters).build();
 	}
 
+	//将配置中的过滤器进行实例化，包装为带order的GatewayFilter
 	@SuppressWarnings("unchecked")
 	List<GatewayFilter> loadGatewayFilters(String id,
                                            List<FilterDefinition> filterDefinitions) {
@@ -149,6 +159,7 @@ public class RouteDefinitionRouteLocator implements RouteLocator {
 					.bind();
 			// @formatter:on
 
+			//配置中存在routeId时，需要将routeId赋值
 			// some filters require routeId
 			// TODO: is there a better place to apply this?
 			if (configuration instanceof HasRouteId) {
@@ -171,12 +182,13 @@ public class RouteDefinitionRouteLocator implements RouteLocator {
 	private List<GatewayFilter> getFilters(RouteDefinition routeDefinition) {
 		List<GatewayFilter> filters = new ArrayList<>();
 
+		//添加路由器中默认的过滤器
 		// TODO: support option to apply defaults after route specific filters?
 		if (!this.gatewayProperties.getDefaultFilters().isEmpty()) {
 			filters.addAll(loadGatewayFilters(DEFAULT_FILTERS,
 					this.gatewayProperties.getDefaultFilters()));
 		}
-
+        //添加路由器中配置的过滤器
 		if (!routeDefinition.getFilters().isEmpty()) {
 			filters.addAll(loadGatewayFilters(routeDefinition.getId(),
 					routeDefinition.getFilters()));
@@ -186,6 +198,13 @@ public class RouteDefinitionRouteLocator implements RouteLocator {
 		return filters;
 	}
 
+	/**
+	 * 组合断言,将断言组合为二叉树的结构，最先加载的放在叶子节点，逐步向上填充
+	 * 多个断言组合通过“and”的方式组合
+	 * 其中每个节点中包含三层
+	 * @param routeDefinition
+	 * @return
+	 */
 	private AsyncPredicate<ServerWebExchange> combinePredicates(
 			RouteDefinition routeDefinition) {
 		List<PredicateDefinition> predicates = routeDefinition.getPredicates();
@@ -202,6 +221,15 @@ public class RouteDefinitionRouteLocator implements RouteLocator {
 		return predicate;
 	}
 
+	/**
+	 * 获取AsyncPredicate对象，返回对象为
+	 * 第一层：  节点(DefaultAsyncPredicate)
+	 * 第二层：   delegate节点（Predicate<T>）
+	 * 第三层：   right节点  具体的断言节点（由断言工厂生成）
+	 * @param route
+	 * @param predicate
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	private AsyncPredicate<ServerWebExchange> lookup(RouteDefinition route,
                                                      PredicateDefinition predicate) {

@@ -44,6 +44,7 @@ public class FilteringWebHandler implements WebHandler {
 		Route route = exchange.getRequiredAttribute(GATEWAY_ROUTE_ATTR);
 		List<GatewayFilter> gatewayFilters = route.getFilters();
 
+		//将全局过滤器和GatewayFilter过滤器进行组合，并排序执行
 		List<GatewayFilter> combined = new ArrayList<>(this.globalFilters);
 		combined.addAll(gatewayFilters);
 		// TODO: needed or cached?

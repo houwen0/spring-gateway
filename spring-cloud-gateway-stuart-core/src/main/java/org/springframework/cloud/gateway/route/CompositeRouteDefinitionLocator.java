@@ -25,6 +25,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 /**
+ * 目前只对路由中id为null时，进行自动生成id填充
  * @author Spencer Gibb
  */
 public class CompositeRouteDefinitionLocator implements RouteDefinitionLocator {
@@ -36,6 +37,7 @@ public class CompositeRouteDefinitionLocator implements RouteDefinitionLocator {
 
 	private final IdGenerator idGenerator;
 
+	//如果路由的id为null，自动生成进行填充
 	public CompositeRouteDefinitionLocator(Flux<RouteDefinitionLocator> delegates) {
 		this(delegates, new AlternativeJdkIdGenerator());
 	}

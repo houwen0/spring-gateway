@@ -30,8 +30,11 @@ public class RoutePredicateHandlerMapping extends AbstractHandlerMapping {
 
 	@Override
 	protected Mono<?> getHandlerInternal(ServerWebExchange exchange) {
+		        //lookupRoute返回是满足条件的第一个路由
 		return lookupRoute(exchange)
 				// .log("route-predicate-handler-mapping", Level.FINER) //name this
+				//此处只有一个数据，满足条件的第一个路由
+				//将匹配的路由放到exchange中，供webHandler中使用
 				.flatMap((Function<Route, Mono<?>>) r -> {
 					exchange.getAttributes().remove(GATEWAY_PREDICATE_ROUTE_ATTR);
 					exchange.getAttributes().put(GATEWAY_ROUTE_ATTR, r);
@@ -55,20 +58,15 @@ public class RoutePredicateHandlerMapping extends AbstractHandlerMapping {
 		return this.routeLocator.getRoutes()
 				// individually filter routes so that filterWhen error delaying is not a
 				// problem
+				//按照顺序输出返回结果
 				.concatMap(route -> Mono.just(route).filterWhen(r -> {
 					// add the current route we are testing
 					exchange.getAttributes().put(GATEWAY_PREDICATE_ROUTE_ATTR, r.getId());
 					return r.getPredicate().apply(exchange);
-				})
-						// instead of immediately stopping main flux due to error, log and
-						// swallow it
-						.doOnError(e -> logger.error(
-								"Error applying predicate for route: " + route.getId(),
-								e))
-						.onErrorResume(e -> Mono.empty()))
-				// .defaultIfEmpty() put a static Route not found
-				// or .switchIfEmpty()
-				// .switchIfEmpty(Mono.<Route>empty().log("noroute"))
+				}).doOnError(e -> logger.error(
+						"Error applying predicate for route: " + route.getId(),
+						e)).onErrorResume(e -> Mono.empty()))
+				//此处第一个匹配的路由
 				.next()
 				// TODO: error handling
 				.map(route -> {

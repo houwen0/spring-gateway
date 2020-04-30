@@ -30,6 +30,7 @@ import java.util.*;
 import static org.springframework.util.StringUtils.tokenizeToStringArray;
 
 /**
+ * 从yaml文件中加载原始的route数据
  * @author Spencer Gibb
  */
 @Validated
